@@ -15,8 +15,6 @@ class pCard (idolCard):
         self.pfmApt = pfmApt #dict
         self.memoryAppeals = memoryAppeals #list
         self.skillPanels = skillPanels #list
-    def output_pLua ():
-        pass
 
 class sCard(idolCard):
     def __init__(self, uid, name, get_med, rarity, bvId, unit,inspirationAttribute,ideaMark,musicSupportProficiencyBonuses,
@@ -31,5 +29,3 @@ class sCard(idolCard):
         self.supportSkills = supportSkills #list
         self.supportIdolActiveSkill = supportIdolActiveSkill #list
         self.skillPanels = skillPanels #list
-    def output_sLua ():
-        pass
