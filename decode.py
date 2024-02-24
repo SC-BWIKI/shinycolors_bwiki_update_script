@@ -150,6 +150,7 @@ def sCardDecode(cardata):
             color = "#ffffff"
         a = {"sequence":sequence,"step":step,"name":name,"comment":comment,"color":color}
         data.skillPanels.append(a)
+    return data
 
 def pCard_to_luaTable(card):
     lua_table = '{'
@@ -157,7 +158,8 @@ def pCard_to_luaTable(card):
     lua_table += f"uid = {card.uid}, "
     lua_table += f"unit = '{card.unit}', "
     lua_table += f"rarity = '{card.rarity}', "
-    
+    lua_table += f"date = '{card.date}', "
+    lua_table += f"get_med = '{card.get_med}', "
     # Memory Appeals
     lua_table += "memoryAppeals = {"
     memory_appeals = []
@@ -192,6 +194,8 @@ def sCard_to_luaTable(card):
     lua_table += f"uid = {card.uid},"
     lua_table += f"rarity = '{card.rarity}',"
     lua_table += f"unit = '{card.unit}',"
+    lua_table += f"date = '{card.date}', "
+    lua_table += f"get_med = '{card.get_med}', "
     lua_table += f"inspirationAttribute = '{card.inspirationAttribute}',"
     lua_table += f"ideaMark = '{card.ideaMark}',"
     # musicSupportProficiencyBonuses
