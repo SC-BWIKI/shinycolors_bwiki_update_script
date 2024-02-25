@@ -38,4 +38,4 @@ if __name__ == "__main__":
         s_luaTable += sCard_to_luaTable(s_data)
         s_luaTable += ',\n'
     s_luaTable += '}'
-    s_luaTable += 'return p' #此处p_luaTable就是最后的数据库lua代码文本，需要通过接口把此字符串变量传到 模块:P卡数据库内容
+    s_luaTable += 'return p' #此处s_luaTable就是最后的数据库lua代码文本，需要通过接口把此字符串变量传到 模块:S卡数据库内容
