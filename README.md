@@ -1,5 +1,9 @@
 # auto_update_script
-wiki自动化更新脚本
+sc_bwiki自动化更新脚本
+## 环境要求
+基于python 3.12，使用旧版本会报错，用到需要下载的包有requests和BeautifulSoup
+下载requests `pip install requests`
+下载BeautifulSoup `pip install BeautifulSoup4`
 ## 文件结构
 ### card.py
   程序暂时作废，封装成类的代码块。（缺少此文件不影响运行）
