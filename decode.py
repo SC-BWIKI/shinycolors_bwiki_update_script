@@ -1,18 +1,9 @@
 import json
 import re
+import os
 from card import *
 from dic import *
-
-def dic_sort(dic):
-    dic = sorted(dic.items(),key=lambda item:len(item[0]),reverse=True)
-    return dic
-
-def word_translate (data,dic):
-    sorted_items = dic_sort(dic)
-    for key, value in sorted_items:
-        data = data.replace(key, value)
-    return data
-
+from reptile import *
 def sentence_translate(data,skillSenDic):
     dic_type = {
     "$num": "(\\d+\\.?\\d*%?)",
@@ -320,3 +311,68 @@ def sCard_to_luaTable(card):
     lua_table += ', '.join(skill_panels) + "}"
     lua_table += '},'
     return lua_table
+
+def read_json_files_from_directory(directory):
+    # 存储所有JSON文件内容的列表
+    json_contents = []
+    
+    # 确保目录存在
+    if not os.path.exists(directory):
+        print(f"Directory {directory} does not exist.")
+        return json_contents
+
+    # 遍历指定目录
+    for filename in os.listdir(directory):
+        # 检查文件是否为JSON文件
+        if filename.endswith(".json"):
+            # 构造完整的文件路径
+            file_path = os.path.join(directory, filename)
+            # 打开并读取JSON文件内容
+            try:
+                with open(file_path, 'r', encoding='utf-8') as file:
+                    data = json.load(file)
+                    json_contents.append(data)
+            except Exception as e:
+                print(f"Error reading {file_path}: {e}")               
+    return json_contents
+
+def pcardJson_to_luaTable():
+    web_p_data = p_card_reptile()
+    p_luaTable = 'local p ={\n'
+    file_list = read_json_files_from_directory('pCard') #传入json字符串数组，需要解析迷糊程序的接口down本地用file加载或者直接调用内存
+    for p_data in file_list:
+        decode_data = pCardDecode(p_data)
+        decode_data["date"] = ""
+        decode_data["get_med"] = ""
+        for j in web_p_data:
+            if j["cardname"] == decode_data['name']:
+                decode_data['get_med'] = word_translate(j["get_med"],get_medDic)
+                decode_data['date'] = j["date"]
+            else:
+                continue
+        p_luaTable += pCard_to_luaTable(decode_data)
+        p_luaTable += ',\n'
+    p_luaTable += '}\n'
+    p_luaTable += 'return p' #此处p_luaTable就是最后的数据库lua代码文本，需要通过接口把此字符串变量传到 模块:P卡数据库内容
+    # 指定output目录相对于当前脚本的路径
+    return p_luaTable
+    
+def scardJson_to_luaTable():
+    web_s_data = s_card_reptile()
+    s_luaTable = 'local p ={\n'
+    file_list2 = read_json_files_from_directory('sCard') #传入json字符串数组，需要解析迷糊程序的接口down本地用file加载或者直接调用内存
+    for s_data in file_list2:
+        decode_sdata = sCardDecode(s_data)
+        decode_sdata["date"] = ""
+        decode_sdata["get_med"] = ""
+        for j in web_s_data:
+            if j["cardname"] == decode_sdata['name']:
+                decode_sdata['get_med'] = word_translate(j["get_med"],get_medDic)
+                decode_sdata['date'] = j["date"]
+            else:
+                continue
+        s_luaTable += sCard_to_luaTable(decode_sdata)
+        s_luaTable += '\n'
+    s_luaTable += '}\n'
+    s_luaTable += 'return p' #此处s_luaTable就是最后的数据库lua代码文本，需要通过接口把此字符串变量传到 模块:S卡数据库内容
+    return s_luaTable

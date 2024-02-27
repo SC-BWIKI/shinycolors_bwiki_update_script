@@ -452,3 +452,13 @@ get_medDic = {
     "CD特典":"CD特典",
     "開始時所持":"初始自带",
 }
+
+def dic_sort(dic):
+    dic = sorted(dic.items(),key=lambda item:len(item[0]),reverse=True)
+    return dic
+
+def word_translate (data,dic):
+    sorted_items = dic_sort(dic)
+    for key, value in sorted_items:
+        data = data.replace(key, value)
+    return data
