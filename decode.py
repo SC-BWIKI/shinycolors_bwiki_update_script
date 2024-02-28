@@ -38,8 +38,13 @@ def pCardDecode(pCardata):
     for i in range(len(pCardata['idol']['skillPanels'])):
         sequence = pCardata['idol']['skillPanels'][i]['sequence'] #技能所在位置从右往左数的位置
         step = pCardata['idol']['skillPanels'][i]['step'] #技能所在位置的层数，从上到下
-        name = word_translate(pCardata['idol']['skillPanels'][i]['skill']['name'],skillWordDic) #还需
-        comment = word_translate(pCardata['idol']['skillPanels'][i]['skill']['comment'],skillWordDic)
+        name = word_translate(pCardata['idol']['skillPanels'][i]['skill']['name'],skillWordDic) 
+        if pCardata['idol']['skillPanels'][i]['skillCategory'] == "passive":
+            comment = word_translate(enza_skill_senTrans(pCardata['idol']['skillPanels'][i]['skill']['comment'],skillSenDic,enza_skill_str),skillWordDic) 
+        elif pCardata['idol']['skillPanels'][i]['skillCategory'] == "limit_break":
+            comment = pCardata['idol']['skillPanels'][i]['skill']['comment'] 
+        else:
+            comment = word_translate(pCardata['idol']['skillPanels'][i]['skill']['comment'],skillWordDic) 
         if pCardata['idol']['skillPanels'][i]['skill']['skillEffects'][0]['attribute'] == "vocal":
             color = "#ff8c94"
         elif pCardata['idol']['skillPanels'][i]['skill']['skillEffects'][0]['attribute']  == "dance":

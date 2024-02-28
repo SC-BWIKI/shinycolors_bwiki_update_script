@@ -157,6 +157,7 @@ skillWordDic = {
     "必ず最初に":"必定最先",
     "必ず最後に":"必定最后",
     "ごく稀":"非常低",
+    "アピール":"Appeal",
     "\n":""
 }
 
@@ -264,7 +265,8 @@ skillSenDic = {
     "$noun効果$percentが付与される":"给予$2的$1效果",
     "$noun効果$percent付与":"给予$2的$1效果",
     "$noun開始時に$nounが$percent回復する効果":"$1开始时$2恢复$3的效果",
-    "$nameのアピール倍率が$num倍UPする効果":"$1的Appeal倍率上升$2倍的效果"
+    "$nameのアピール倍率が$num倍UPする効果":"$1的Appeal倍率上升$2倍的效果",
+    "条件:$num位":"条件:$1位",
 }
 
 supSkillDic = {
@@ -454,23 +456,23 @@ get_medDic = {
     "開始時所持":"初始自带",
 }
 
+enza_skill_str = {
+    "unit":["als"],#list 存放组合名
+    "name":["有栖川 夏葉","als"],#list 存放偶像名
+    "noun":["dance","メンタル","スター","観客"],#list 存放属性类型
+    "other":[],#list 存放其他?
+    "sep":[],#list 存放sep?
+    "uk":[],#list 存放uk 
+}
 
 def dic_sort(dic):
     dic = sorted(dic.items(),key=lambda item:len(item[0]),reverse=True)
     return dic
 
-def sentence_translate(data,dic):
-    #根据中括号分割
-    #数据预处理，保留变量值
-    #$noun/$num/$percent
-    #/$sep/$uk/$unit/$name/$other
-    unit = ["als"] #list 存放组合名
-    name = ["als","有栖川 夏葉"] #list 存放偶像名
-    noum = ["dance"] #list 存放属性类型
-    other = [] #list 存放其他?
-    sep = [] #list 存放sep?
-    uk = [] #list 存放uk 
-    dict_f = unit + name + noum + other + sep + uk #合并字典
+def sentence_translate(data,dic,sen_str):
+    dict_f = []
+    for i in sen_str:
+        dict_f += sen_str[i]
     strings_regex_part = '|'.join(re.escape(s) for s in dict_f) #转义并链接字符串
     #合并规则
     regex = r'(\d+)％|\d{1,2}|' + strings_regex_part
@@ -479,41 +481,16 @@ def sentence_translate(data,dic):
     sorted_matches = sorted(matches_with_span, key=lambda x: x[1]) #按span排序，exp:[('value1',(span_s,span_e)),('value2',(span_s2,span_e2))]
     #替换字符
     data = re.sub(r'(\d+)％', '$percent', data)
-    data = re.sub(r'(\d+)', '$num', data)
-    for i in unit:
-        data = re.sub(re.escape(i),"$unit",data)
-    for i in name:
-        data = re.sub(re.escape(i),"$name",data)
-    for i in noum:
-        data = re.sub(re.escape(i),"$noum",data)
-    for i in other:
-        data = re.sub(re.escape(i),"$other",data)
-    for i in sep:
-        data = re.sub(re.escape(i),"$sep",data)
-    for i in uk:
-        data = re.sub(re.escape(i),"$uk",data)
-    #-------------------------------
+    data = re.sub(r'(\d{1,3})','$num', data)
+    for a,b in sen_str.items():
+        for i in sen_str[a]:
+            data = re.sub(re.escape(i),"$"+a,data)
     sorted_items = dic_sort(dic) #排序字典
     for key, value in sorted_items: #根据字典翻译整句
         data = data.replace(key, value)
-    #-------------------------
-    dollar_items = re.findall(r'\$(\d+)', data) #找寻$1/$2等字符并如果有重复字符后面字符+1
-    adjusted_dollar_items = []
-    adjustment = 0
-    for item in dollar_items:
-        if dollar_items.count(item) > 1 and item not in adjusted_dollar_items:
-            # 如果当前元素重复且未处理过，增加调整量
-            adjustment += 1
-        # 如果已经有调整量，增加当前元素的数值
-        new_value = int(item) + adjustment
-        adjusted_dollar_items.append(f"${new_value}")
-    adjusted_text = data
-    for original, new in zip(re.findall(r'\$\d+', data), adjusted_dollar_items):
-        adjusted_text = adjusted_text.replace(original, new, 1)
-    #还原之前列表储存的值放回句子中
-    matches2 = re.findall(r'\$(\d+)', adjusted_text)
+    matches2 = re.findall(r'\$(\d+)', data)
     mapping = {int(index): match[0] for index, match in zip(matches2, sorted_matches)}
-    restored_text = adjusted_text
+    restored_text = data
     for index, original in mapping.items():
         restored_text = re.sub(r'\$' + str(index), original, restored_text)
     return restored_text
@@ -524,3 +501,14 @@ def word_translate (data,dic):
     for key, value in sorted_items:
         data = data.replace(key, value)
     return data
+
+def enza_skill_senTrans(data,dic,sen_str):
+    #分割句子
+    data_sep = re.findall(r'\[(.*?)\]',data)
+    #循环翻译
+    trans_text = []
+    for i in data_sep:
+        trans_text.append(sentence_translate(i,dic,sen_str))
+    #组装句子
+    trans_text_final =f"["+trans_text[0] +f"]\n"+f"["+trans_text[1] +f"]\n"+f"["+trans_text[2] +f"]"
+    return trans_text_final
