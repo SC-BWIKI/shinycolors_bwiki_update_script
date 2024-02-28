@@ -4,41 +4,6 @@ import os
 from card import *
 from dic import *
 from reptile import *
-def sentence_translate(data,skillSenDic):
-    dic_type = {
-    "$num": "(\\d+\\.?\\d*%?)",
-    "$percent": "(\\d+\\.?\\d*[%％]?)",
-    "$noun": "(.+)",
-    "$name": "(.+)",
-    "$other": "(.+)",
-    "$unit": "(.+)",
-    "$uk": "(.+)",
-    "$unknown": "(.+)",
-    "$sep": "(.+)",
-    }
-    # 初始化字典正则
-    new_dict = {}   #新字典
-    trans = ""
-    for st in skillSenDic:
-        res = st
-        for dic in dic_type:
-            res = res.replace(dic, dic_type[dic])
-        new_dict[res] = skillSenDic[st]
-    for origin in data:
-        for pat in new_dict:
-            result = re.findall(pat, origin)
-            if result:
-                trans = new_dict[pat]
-                if isinstance(result[0], str):
-                    # 判断为字符串直接替换
-                    trans = re.sub(r"\$1", result[0], trans, 1)
-                else:
-                    # 为元组替换循环替换多个结果
-                    i = 0
-                    for str in result[0]:
-                        i = i + 1
-                        trans = re.sub(r"\$%d" % i, str, trans, 1)
-    return trans
 
 def pCardDecode(pCardata):
     #除Bvid、获得方式外的其他属性转换字典传递

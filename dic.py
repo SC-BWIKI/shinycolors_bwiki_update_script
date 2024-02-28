@@ -1,3 +1,4 @@
+import re
 nameDic = {
     "櫻木真乃" : "樱木真乃",
     "風野灯織" : "风野灯织",
@@ -453,9 +454,70 @@ get_medDic = {
     "開始時所持":"初始自带",
 }
 
+
 def dic_sort(dic):
     dic = sorted(dic.items(),key=lambda item:len(item[0]),reverse=True)
     return dic
+
+def sentence_translate(data,dic):
+    #根据中括号分割
+    #数据预处理，保留变量值
+    #$noun/$num/$percent
+    #/$sep/$uk/$unit/$name/$other
+    unit = ["als"] #list 存放组合名
+    name = ["als","有栖川 夏葉"] #list 存放偶像名
+    noum = ["dance"] #list 存放属性类型
+    other = [] #list 存放其他?
+    sep = [] #list 存放sep?
+    uk = [] #list 存放uk 
+    dict_f = unit + name + noum + other + sep + uk #合并字典
+    strings_regex_part = '|'.join(re.escape(s) for s in dict_f) #转义并链接字符串
+    #合并规则
+    regex = r'(\d+)％|\d{1,2}|' + strings_regex_part
+    matches = re.finditer(regex, data)
+    matches_with_span = [(match.group(), match.span()) for match in matches] #存入列表
+    sorted_matches = sorted(matches_with_span, key=lambda x: x[1]) #按span排序，exp:[('value1',(span_s,span_e)),('value2',(span_s2,span_e2))]
+    #替换字符
+    data = re.sub(r'(\d+)％', '$percent', data)
+    data = re.sub(r'(\d+)', '$num', data)
+    for i in unit:
+        data = re.sub(re.escape(i),"$unit",data)
+    for i in name:
+        data = re.sub(re.escape(i),"$name",data)
+    for i in noum:
+        data = re.sub(re.escape(i),"$noum",data)
+    for i in other:
+        data = re.sub(re.escape(i),"$other",data)
+    for i in sep:
+        data = re.sub(re.escape(i),"$sep",data)
+    for i in uk:
+        data = re.sub(re.escape(i),"$uk",data)
+    #-------------------------------
+    sorted_items = dic_sort(dic) #排序字典
+    for key, value in sorted_items: #根据字典翻译整句
+        data = data.replace(key, value)
+    #-------------------------
+    dollar_items = re.findall(r'\$(\d+)', data) #找寻$1/$2等字符并如果有重复字符后面字符+1
+    adjusted_dollar_items = []
+    adjustment = 0
+    for item in dollar_items:
+        if dollar_items.count(item) > 1 and item not in adjusted_dollar_items:
+            # 如果当前元素重复且未处理过，增加调整量
+            adjustment += 1
+        # 如果已经有调整量，增加当前元素的数值
+        new_value = int(item) + adjustment
+        adjusted_dollar_items.append(f"${new_value}")
+    adjusted_text = data
+    for original, new in zip(re.findall(r'\$\d+', data), adjusted_dollar_items):
+        adjusted_text = adjusted_text.replace(original, new, 1)
+    #还原之前列表储存的值放回句子中
+    matches2 = re.findall(r'\$(\d+)', adjusted_text)
+    mapping = {int(index): match[0] for index, match in zip(matches2, sorted_matches)}
+    restored_text = adjusted_text
+    for index, original in mapping.items():
+        restored_text = re.sub(r'\$' + str(index), original, restored_text)
+    return restored_text
+    
 
 def word_translate (data,dic):
     sorted_items = dic_sort(dic)

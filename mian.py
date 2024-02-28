@@ -1,8 +1,8 @@
 import os
-import json
 from card import *
 from decode import *
 from reptile import *
+from dic import *
 
 if __name__ == "__main__":
     output_directory = "output"
