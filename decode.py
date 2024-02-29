@@ -1,7 +1,6 @@
 import json
 import re
 import os
-from card import *
 from dic import *
 from reptile import *
 
