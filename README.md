@@ -7,8 +7,6 @@ sc_bwiki自动化更新脚本
 下载requests `pip install requests`
 下载BeautifulSoup `pip install BeautifulSoup4`
 ## 文件结构
-### card.py
-  程序暂时作废，封装成类的代码块。（缺少此文件不影响运行）
 ### dic.py
   翻译字典都存在此文件中。
 ### decode.py
