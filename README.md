@@ -14,4 +14,4 @@ sc_bwiki自动化更新脚本
 ### reptile.py
   爬取wikiwiki上的实装日期和获得方法
 ### mian.py
-  主函数入口，目前是遍历pCard文件夹和sCard文件夹下的所有json文件转换成luaTable后输出到/output目录，后续将封装进decode，然后入口用来拼接现有程序和json爬取部分和mw API编辑部分。
+  主函数入口，暂未实现，用来拼接现有程序分和mw API编辑部分，实现自动化更新。
