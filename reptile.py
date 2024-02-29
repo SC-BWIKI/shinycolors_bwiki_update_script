@@ -1,6 +1,5 @@
 import requests
 from bs4 import BeautifulSoup
-from card import *
 from dic import *
 from decode import *
 def add_data(data,table):
