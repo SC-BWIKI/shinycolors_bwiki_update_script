@@ -1,7 +1,7 @@
 # auto_update_script
 sc_bwiki自动化更新脚本
 ## 特别感谢
-数据来自shinycolors.moe站点，日期和获得方式来自sc日文wiki，bvId来自编辑组成员奥数心白整理。翻译字典来自闪耀色彩汉化插件和部分sc_bwiki编辑组成员。
+数据来自shinycolors.moe站点站长提供，日期和获得方式来自sc日文wiki，bvId来自编辑组成员奥数心白整理。翻译字典来自闪耀色彩汉化插件和部分sc_bwiki编辑组成员。
 ## 环境要求
 基于python 3.12，使用旧版本会报错，用到需要下载的包有requests和BeautifulSoup
 下载requests `pip install requests`
