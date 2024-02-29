@@ -7,13 +7,15 @@ sc_bwiki自动化更新脚本
 下载requests `pip install requests`
 下载BeautifulSoup `pip install BeautifulSoup4`
 ## 文件结构
-###1030030040.json和2020070010.json
-  源json文件样例，1开头对应Pcard，2开头对应sCard
+### 1030030040.json和2020070010.json
+  源json文件样例，1开头对应Pcard，2开头对应sCard。
 ### dic.py
-  翻译字典都存在此文件中。
+  翻译字典和函数都存在此文件中。
 ### decode.py
-  主要负责P卡和S卡json数据传入后的解码，简化以及输出位luaTable程序
+  主要负责P卡和S卡json数据传入后的解码，简化以及输出为luaTable。
 ### reptile.py
-  爬取wikiwiki上的实装日期和获得方法
+  爬取wikiwiki上的实装日期和获得方法。
 ### mian.py
   主函数入口，暂未实现，用来拼接现有程序分和mw API编辑部分，实现自动化更新。
+## 使用说明
+  程序仅供站内自动更新数据和站外人员wiki自动化更新参考学习使用
