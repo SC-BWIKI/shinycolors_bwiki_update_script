@@ -1,5 +1,4 @@
 import os
-from card import *
 from decode import *
 from reptile import *
 from dic import *
