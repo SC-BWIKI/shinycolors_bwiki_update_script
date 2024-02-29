@@ -1,5 +1,5 @@
 from dic import *
-data = "[条件:2位]\n[確率:40％]\n[最大:2回]"
+data = "[条件:VisualUPが2個以上付与されている場合]\n[確率:20％]\n[最大:2回]"
 a = word_translate(enza_skill_senTrans(data,skillSenDic,enza_skill_str),skillWordDic)
 print(a)
 

@@ -158,6 +158,7 @@ skillWordDic = {
     "必ず最後に":"必定最后",
     "ごく稀":"非常低",
     "アピール":"Appeal",
+    "ターン":"回合",
     "\n":""
 }
 
@@ -172,7 +173,7 @@ skillSenDic = {
     "$nounに$unknown$num倍アピール":"对$1$2$3倍Appeal",
     "$nounに$noun$num倍アピール":"对$1$2$3倍Appeal",
     "$nounに$uk最大$num倍アピール":"对$1$2最大$3倍Appeal",
-    "$noun開始時$sep$noun$percent回復":"$1开始时$2恢复$3",
+    "$noun開始時$sep$noun$percent回復":"$1开始时$2恢复$3",#需要去掉sep
     "$nounの$noun$percent回復":"$1的$2恢复$3",
     "$noun$num倍アピール":"$1$2倍Appeal",
     "$noun最大$num倍アピール":"$1最大$2倍Appeal",
@@ -197,7 +198,8 @@ skillSenDic = {
     "条件:$noun$percent以下":"条件:$1$2以下",
     "条件:$nounDOWNが付与されている場合":"条件:存在$1DOWN状态时",
     "条件:$nounUPが付与されている場合":"条件:存在$1UP状态时",
-    "条件:$nounUPが$num$sep以上付与されている場合":"条件:存在$2个以上$1UP状态时",
+    "条件:$nounUPが$num個以上付与されている場合":"条件:存在$2个以上$1UP状态时",
+    "条件:$nounUPが$numつ以上付与されている場合":"条件:存在$2个以上$1UP状态时",
     "条件:$nounCUTが付与されている場合":"条件:存在$1CUT状态时",
     "条件:$nounが付与されている場合":"条件:存在$1状态时",
     "条件:$noun効果が付与されている場合":"条件:存在$1状态时",
@@ -209,6 +211,7 @@ skillSenDic = {
     "条件:履歴に$name、$name、$nameがある場合":"条件:履历中包含$1、$2、$3时",
     "条件:履歴に$name、$name、$name、$nameがある場合":"条件:履历中包含$1、$2、$3、$4时",
     "条件:履歴に$unit全員がある場合":"条件:履历中包含$1全员时",
+    "条件:履歴に$unitのアイドルが$num人以上ある場合":"条件:履历中包含$2以上$1成员时",#待修改匹配
     "確率:$percent":"概率:$1",
     "確率:$other":"概率:$1",
     "最大:$num回":"最多:$1次",
@@ -457,12 +460,12 @@ get_medDic = {
 }
 
 enza_skill_str = {
-    "unit":["als"],#list 存放组合名
-    "name":["有栖川 夏葉","als"],#list 存放偶像名
-    "noun":["dance","メンタル","スター","観客"],#list 存放属性类型
+    "unit":["アンティーカ","ノクチル","ストレイ","アルスト","イルミネ","放クラ"],#list 存放组合名
+    "name":["有栖川 夏葉"],#list 存放偶像名
+    "noun":["Vocal","Dance","Visual","メンタル","スター","観客","リアクション回避率","注目度","パッシブスキル発動率","メランコリー","リラックス"],#list 存放属性类型
     "other":[],#list 存放其他?
-    "sep":[],#list 存放sep?
     "uk":[],#list 存放uk 
+    #"未翻译":["条件:芹沢 あさひがライブに参加している場合"]
 }
 
 def dic_sort(dic):
@@ -488,8 +491,8 @@ def sentence_translate(data,dic,sen_str):
     sorted_items = dic_sort(dic) #排序字典
     for key, value in sorted_items: #根据字典翻译整句
         data = data.replace(key, value)
-    matches2 = re.findall(r'\$(\d+)', data)
-    mapping = {int(index): match[0] for index, match in zip(matches2, sorted_matches)}
+    mapping = {i+1: match[0] for i, match in enumerate(sorted_matches)}
+    #mapping = {int(index): match[0] for index, match in zip(matches2, sorted_matches)}#这句生成的mapping有问题
     restored_text = data
     for index, original in mapping.items():
         restored_text = re.sub(r'\$' + str(index), original, restored_text)
